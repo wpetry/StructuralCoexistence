@@ -4,7 +4,19 @@ This is a Shiny app that allows the user to interactively explore the structural
 
 To use the app, clone this repo locally or try it out online at: https://ecodynamics.shinyapps.io/StructuralCoexistence/
 
-Citation:
+Any errors are most likely mine.
+
+### Citation:
 
 Saavedra, S., Rohr, R. P., Bascompte, J., Godoy, O., Kraft, N. J. B. and Levine, J. M. (2017), A structural approach for understanding multispecies coexistence. Ecol Monogr, 87: 470–486. [doi:10.1002/ecm.1263](http://dx.doi.org/10.1002/ecm.1263)
 
+### To do:
+- explainer text on main panel
+- legend for plot symbols
+- better labels on cone plot
+- graphically indicate which species pairs are feasible
+- figure out subscript in RenderTable (expressions?)
+- tab for 4 species (better way to show 3d plots?)
+- remove +/- on sidebarPanel (ugh Javascript in shinyIncubator)
+- speed up server-side
+- re-do coordinate system to make ternary plot equilateral (will require re-write of most functions, possibly additional package dependency to handle the Cartesian-to-ternary conversions)
