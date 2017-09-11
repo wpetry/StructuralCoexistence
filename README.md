@@ -4,7 +4,7 @@ This is a Shiny app that allows the user to interactively explore the structural
 
 To use the app, clone this repo locally or try it out online at: https://ecodynamics.shinyapps.io/StructuralCoexistence/
 
-Any errors are most likely mine.
+Any errors are most likely mine—please submit an Issue or contact me directly if you find one.
 
 ### Citation:
 
@@ -14,9 +14,10 @@ Saavedra, S., Rohr, R. P., Bascompte, J., Godoy, O., Kraft, N. J. B. and Levine,
 - explainer text on main panel
 - legend for plot symbols
 - better labels on cone plot
+- row/column headers for the competition coefficient matrix
 - graphically indicate which species pairs are feasible
 - figure out subscript in RenderTable (expressions?)
 - tab for 4 species (better way to show 3d plots?)
 - remove +/- on sidebarPanel (ugh Javascript in shinyIncubator)
 - speed up server-side
-- re-do coordinate system to make ternary plot equilateral (will require re-write of most functions, possibly additional package dependency to handle the Cartesian-to-ternary conversions)
+- re-do coordinate system to make ternary plot equilateral (will require re-write of most functions, possibly additional package dependency to make the Cartesian-to-ternary conversions easier)
