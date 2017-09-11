@@ -35,7 +35,7 @@ r_centroid <- function(alpha){
 #structural fitness difference (in degree)
 theta <- function(alpha,r){
   r_c <- r_centroid(alpha)
-  out <- acos(sum(r_c*r)/(sqrt(sum(r^2))*sqrt(sum(r_c^2))))*180/pi
+  out <- acos(round(sum(r_c*r)/(sqrt(sum(r^2))*sqrt(sum(r_c^2))),15))*180/pi  # add rounding step to overcome floating point errors
   return(out)
 }
 
@@ -154,7 +154,7 @@ cone_3sp <- function(alpha){
   X4 <- vc[1] * lambda
   Y4 <- vc[2] * lambda
   Z4 <- vc[3] * lambda
-  s3d$points3d(X4,-Y4,Z4,type='l',col='orange3',lwd=4) 
+  s3d$points3d(X4,-Y4,Z4,type='l',col='blue4',lwd=4) 
   
   
   lambda = c(1.2,10)
@@ -176,7 +176,7 @@ cone_3sp <- function(alpha){
   X4 <- vc[1] * lambda
   Y4 <- vc[2] * lambda
   Z4 <- vc[3] * lambda
-  s3d$points3d(X4,-Y4,Z4,type='l',col='orange3',lwd=4,lty=2) 
+  s3d$points3d(X4,-Y4,Z4,type='l',col='blue4',lwd=4,lty=2) 
   
   a <- seq(0,1,by=0.01)
   b <- sqrt(1-a^2)
@@ -263,7 +263,7 @@ projection_3sp_with_pairwise <- function(alpha,r){
   color <- col2rgb("mediumseagreen")
   polygon(-c(v1C[1],v2C[1],XX[3],v1C[1]),c(v1C[2],v2C[2],YY[3],v1C[2]),col=rgb(color[1,1],color[2,1],color[3,1],30,maxColorValue=255) ,border = F  )
   points(-c(v1C[1],v2C[1]),c(v1C[2],v2C[2]),col='dodgerblue',pch=16,cex=1.5)
-  #points(-vcC[1],vcC[2],col='orange3',pch=16,cex=1.5)
+  #points(-vcC[1],vcC[2],col='blue4',pch=16,cex=1.5)
   
   #####
   
@@ -287,7 +287,7 @@ projection_3sp_with_pairwise <- function(alpha,r){
   lines(-c(v3C[1],XX[2]),c(v3C[2],YY[2]),col='mediumseagreen',lty=2,lwd=2)
   polygon(-c(v1C[1],v3C[1],XX[2],v1C[1]),c(v1C[2],v3C[2],YY[2],v1C[2]),col=rgb(color[1,1],color[2,1],color[3,1],30,maxColorValue=255) ,border = F  )
   points(-c(v1C[1],v3C[1]),c(v1C[2],v3C[2]),col='dodgerblue',pch=16,cex=1.5)
-  #points(-vcC[1],vcC[2],col='orange3',pch=16,cex=1.5)
+  #points(-vcC[1],vcC[2],col='blue4',pch=16,cex=1.5)
   
   
   #####

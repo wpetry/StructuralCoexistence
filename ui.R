@@ -1,6 +1,5 @@
 library(shiny)
 library(shinyIncubator)
-library(rhandsontable)
 
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
