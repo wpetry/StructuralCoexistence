@@ -9,9 +9,9 @@ shinyUI(fluidPage(
   # Sidebar with a slider input for number of bins 
   sidebarLayout(
     sidebarPanel(
-      numericInput("r1","Intrinsic growth rate, sp. 1 (r1)",1,min=0,max=1,step=0.05),
-      numericInput("r2","Intrinsic growth rate, sp. 2 (r2)",1,min=0,max=1,step=0.05),
-      numericInput("r3","Intrinsic growth rate, sp. 3 (r3)",0.5,min=0,max=1,step=0.05),
+      numericInput("r1","r1",1,min=0,max=1,step=0.05),
+      numericInput("r2","r2",1,min=0,max=1,step=0.05),
+      numericInput("r3","r3",0.5,min=0,max=1,step=0.05),
       matrixInput("alphamat",
                   "Competition coefficients matrix (α)",
                   data.frame(matrix(c(1,0.5,0.05,0.4,1,0.5,0.3,0.6,1),nrow=3))),

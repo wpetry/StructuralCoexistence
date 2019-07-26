@@ -359,7 +359,7 @@ shinyServer(function(input, output) {
                                           MARGIN=2,FUN=paste,collapse=" & "),collapse=", ")))
     data.frame(Metric=c("Structural niche difference (Ω)",
                         "Structural fitness difference (θ)",
-                        "Centroid of feasibility domain (r_c)",
+                        HTML("Centroid of feasibility domain (r_c)"),
                         "Feasible triplet?",
                         "Feasible species pairs"),
                Value=c(paste0(round(exp(Omega(alpha=input$alphamat)),3),"㏛"),
