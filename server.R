@@ -9,8 +9,6 @@ library(rgl)
 ## excerpt from: toolbox_coexistence.R
 #################################################
 require(mvtnorm)
-require(rgl)
-
 
 #input parameters:
 #alpha = competition strength matrix 
@@ -127,16 +125,19 @@ cone_3sp <- function(alpha){
   s3d <- scatterplot3d(X, -Y, Z, xlim=c(0,1.4), ylim=c(0,-1.4), zlim=c(0,1.4),type = 'l',
                        box = F, angle = 30, axis = F, grid = F, asp = 1)
   
-  s3d$points3d(c(0,0),c(0,0),c(0,1.4),type='l',col='black',lwd=2) 
-  s3d$points3d(c(0,0),c(0,-1.4),c(0,0),type='l',col='black',lwd=2) 
-  s3d$points3d(c(0,1.4),c(0,0),c(0,0),type='l',col='black',lwd=2) 
+  s3d$points3d(c(0,0),c(0,0),c(0,1.4), type = 'l', col = 'black', lwd = 2) 
+  s3d$points3d(c(0,0),c(0,-1.4),c(0,0), type = 'l', col = 'black', lwd = 2) 
+  s3d$points3d(c(0,1.4),c(0,0),c(0,0), type = 'l', col = 'black', lwd = 2) 
   
   pp <- s3d$xyz.convert(0.62,0,0)
-  text(x = pp$x,y = pp$y,labels="Intrinsic growth rate sp1",adj=c(0,1.5),cex=1)
-  pp <- s3d$xyz.convert(0,-1.4,0)
-  text(x = pp$x,y = pp$y,labels="Intrinsic growth rate sp2",adj=c(0,1.5),cex=1,srt=31)
-  pp <- s3d$xyz.convert(0,0,0.75)
-  text(x = pp$x,y = pp$y,labels="Intrinsic growth rate sp3",adj=c(0,1.5),cex=1,srt=90)
+  text(x = pp$x,y = pp$y, labels = "Intrinsic growth rate sp1",
+       adj = c(0, 1.5), cex = 1)
+  pp <- s3d$xyz.convert(0, -1.4, 0)
+  text(x = pp$x,y = pp$y, labels = "Intrinsic growth rate sp2",
+       adj = c(0, 1.5), cex = 1, srt = 31)
+  pp <- s3d$xyz.convert(0, 0, 0.75)
+  text(x = pp$x,y = pp$y, labels = "Intrinsic growth rate sp3",
+       adj = c(0, 1.5), cex = 1, srt = 90)
   
   lambda = c(0,1.2)
   X <- v1[1] * lambda 
@@ -348,9 +349,9 @@ projection_3sp_with_pairwise <- function(alpha,r){
 require(rgl)
 
 
-plot_cone_3D <- function(alpha,r = c(0,0,0)){ # if no vector of growth rates provided, null vector
+plot_cone_3D <- function(alpha, r = c(0,0,0)){ # if no vector of growth rates provided, null vector
   
-  D <- diag(1/sqrt(diag(t(alpha)%*%alpha)))
+  D <- diag(1 / sqrt(diag(t(alpha) %*% alpha)))
   alpha_n <- alpha %*% D
   
   v1 <- alpha_n[,1]
@@ -384,10 +385,12 @@ plot_cone_3D <- function(alpha,r = c(0,0,0)){ # if no vector of growth rates pro
   
   # feasibility domain
   
-  plot3d(Sp1,-Sp2,Sp3, col = 'mediumseagreen', xlab = "", ylab = "", zlab = "", type = 'l', lwd = 2.5, box = FALSE, axes = FALSE)
-  lines3d(X2,-Y2,Z2, col = 'mediumseagreen', lwd = 2.5)
-  lines3d(X3,-Y3,Z3, col = 'mediumseagreen', lwd = 2.5)
-  lines3d(X4,-Y4,Z4, col = 'orange', lwd = 2.5)
+  plot3d(Sp1, -Sp2, Sp3, col = 'mediumseagreen',
+         xlab = "", ylab = "", zlab = "",
+         type = 'l', lwd = 2.5, box = FALSE, axes = FALSE)
+  lines3d(X2, -Y2, Z2, col = 'mediumseagreen', lwd = 2.5)
+  lines3d(X3, -Y3, Z3, col = 'mediumseagreen', lwd = 2.5)
+  lines3d(X4, -Y4, Z4, col = 'orange', lwd = 2.5)
   
   
   lambda = c(1.2,2)
@@ -503,7 +506,7 @@ shinyServer(function(input, output) {
   })
   output$cone3d <- renderRglwidget({
     open3d(useNULL = T)
-    plot_cone_3D(input$alphamat, r=c(input$r1, input$r2, input$r3))
+    plot_cone_3D(input$alphamat, r = c(input$r1, input$r2, input$r3))
     rglwidget()
   })
   
