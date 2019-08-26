@@ -1,4 +1,5 @@
 library(shiny)
+library(rgl)
 
 #################################################
 ## Structural coexistence calculation & plotting code
@@ -8,6 +9,8 @@ library(shiny)
 ## excerpt from: toolbox_coexistence.R
 #################################################
 require(mvtnorm)
+require(rgl)
+
 
 #input parameters:
 #alpha = competition strength matrix 
@@ -340,6 +343,130 @@ projection_3sp_with_pairwise <- function(alpha,r){
   
 }
 
+# ported to rgl for interactive 3d plotting
+
+require(rgl)
+
+
+plot_cone_3D <- function(alpha,r = c(0,0,0)){ # if no vector of growth rates provided, null vector
+  
+  D <- diag(1/sqrt(diag(t(alpha)%*%alpha)))
+  alpha_n <- alpha %*% D
+  
+  v1 <- alpha_n[,1]
+  v2 <- alpha_n[,2]
+  v3 <- alpha_n[,3]
+  vc <- (v1 + v2 + v3)
+  vc <- vc / sqrt(sum(vc^2))
+  
+  lambda = c(0,1.2)
+  
+  X <- v1[1] * lambda 
+  Y <- v1[2] * lambda 
+  Z <- v1[3] * lambda 
+  
+  lambda = c(0,1.2)
+  Sp1 <- v1[1] * lambda 
+  Sp2 <- v1[2] * lambda 
+  Sp3 <- v1[3] * lambda 
+  
+  X2 <- v2[1] * lambda
+  Y2 <- v2[2] * lambda
+  Z2 <- v2[3] * lambda
+  
+  X3 <- v3[1] * lambda
+  Y3 <- v3[2] * lambda
+  Z3 <- v3[3] * lambda
+  
+  X4 <- vc[1] * lambda
+  Y4 <- vc[2] * lambda
+  Z4 <- vc[3] * lambda
+  
+  # feasibility domain
+  
+  plot3d(Sp1,-Sp2,Sp3, col = 'mediumseagreen', xlab = "", ylab = "", zlab = "", type = 'l', lwd = 2.5, box = FALSE, axes = FALSE)
+  lines3d(X2,-Y2,Z2, col = 'mediumseagreen', lwd = 2.5)
+  lines3d(X3,-Y3,Z3, col = 'mediumseagreen', lwd = 2.5)
+  lines3d(X4,-Y4,Z4, col = 'orange', lwd = 2.5)
+  
+  
+  lambda = c(1.2,2)
+  X <- v1[1] * lambda 
+  Y <- v1[2] * lambda 
+  Z <- v1[3] * lambda 
+  
+  X2 <- v2[1] * lambda
+  Y2 <- v2[2] * lambda
+  Z2 <- v2[3] * lambda
+  
+  X3 <- v3[1] * lambda
+  Y3 <- v3[2] * lambda
+  Z3 <- v3[3] * lambda
+  
+  X4 <- vc[1] * lambda
+  Y4 <- vc[2] * lambda
+  Z4 <- vc[3] * lambda
+  
+  lines3d(X,-Y,Z, col = 'mediumseagreen', lwd = 1)
+  lines3d(X2,-Y2,Z2, col = 'mediumseagreen', lwd = 1)
+  lines3d(X3,-Y3,Z3, col = 'mediumseagreen', lwd = 1)
+  lines3d(X4,-Y4,Z4, col = 'orange', lwd = 1)
+  
+  
+  #axes
+  
+  lines3d(c(0,1.4),c(0,0),c(0,0), col = 'black', lwd = 1)
+  lines3d(c(0,0),c(0,-1.4),c(0,0), col = 'black', lwd = 1)
+  lines3d(c(0,0),c(0,0),c(0,1.4), col = 'black', lwd = 1)
+  
+  #arcs
+  
+  a <- seq(0,1,by=0.01)
+  b <- sqrt(1-a^2)
+  c <- rep(0,length(a))
+  lines3d(a*1.2,-b*1.2,c*1.2,col='grey', lwd = 2.5) 
+  lines3d(c*1.2,-a*1.2,b*1.2,col='grey', lwd = 2.5) 
+  lines3d(b*1.2,-c*1.2,a*1.2,col='grey', lwd = 2.5) 
+  
+  mu <- seq(0,1,by=0.01)
+  w1 <- t(t(v1)) %*% t(mu) + t(t(v2)) %*% t(1-mu)
+  w1 <- w1 %*% diag(1/sqrt(colSums(w1^2)))
+  
+  w2 <- t(t(v2)) %*% t(mu) + t(t(v3)) %*% t(1-mu)
+  w2 <- w2 %*% diag(1/sqrt(colSums(w2^2)))
+  
+  w3 <- t(t(v3)) %*% t(mu) + t(t(v1)) %*% t(1-mu)
+  w3 <- w3 %*% diag(1/sqrt(colSums(w3^2)))
+  
+  lines3d(w1[1,]*1.2,-w1[2,]*1.2,w1[3,]*1.2,col='mediumseagreen',lwd=2) 
+  lines3d(w2[1,]*1.2,-w2[2,]*1.2,w2[3,]*1.2,col='mediumseagreen',lwd=2) 
+  lines3d(w3[1,]*1.2,-w3[2,]*1.2,w3[3,]*1.2,col='mediumseagreen',lwd=2) 
+  
+  ## Surface of the conical hull (yet to implement in rgl)
+  
+  # wp1 <- s3d$xyz.convert(w1[1,]*1.2,-w1[2,]*1.2,w1[3,]*1.2) 
+  # wp2 <- s3d$xyz.convert(w2[1,]*1.2,-w2[2,]*1.2,w2[3,]*1.2)
+  # wp3 <- s3d$xyz.convert(w3[1,]*1.2,-w3[2,]*1.2,w3[3,]*1.2)
+  # 
+  # XXX <- c(wp1$x, wp2$x, wp3$x)
+  # YYY <- c(wp1$y, wp2$y, wp3$y)
+  
+  # color <- col2rgb("mediumseagreen")
+  # polygon(XXX,YYY,col= rgb(color[1,1],color[2,1],color[3,1],90,maxColorValue=255), border=FALSE)
+  
+  # vector of growth rates
+  
+  rs <- 1.2*r/sqrt(r[1]^2+r[2]^2+r[3]^2)
+  lines3d(c(0,rs[1]),c(0,-rs[2]),c(0,rs[3]), col = 'red', lwd = 2)
+  rs2 <- 1.8*r/sqrt(r[1]^2+r[2]^2+r[3]^2)
+  lines3d(c(0,rs2[1]),c(0,-rs2[2]),c(0,rs2[3]), col = 'red', lwd = 0.8)
+  
+  aspect3d("iso")
+}
+
+
+
+
 #################################################
 # Shiny server logic
 #################################################
@@ -368,10 +495,16 @@ shinyServer(function(input, output) {
                        ifelse(test_feasibility(input$alphamat,r)==1L,"yes","no"),
                        feas_txt))
   })
-    output$cone <- renderPlot({
-      cone_3sp(input$alphamat)
-    })
-    output$proj <- renderPlot({
-      projection_3sp_with_pairwise(input$alphamat,r=c(input$r1, input$r2, input$r3))
-    })
+  output$cone <- renderPlot({
+    cone_3sp(input$alphamat)
+  })
+  output$proj <- renderPlot({
+    projection_3sp_with_pairwise(input$alphamat,r=c(input$r1, input$r2, input$r3))
+  })
+  output$cone3d <- renderRglwidget({
+    open3d(useNULL = T)
+    plot_cone_3D(input$alphamat, r=c(input$r1, input$r2, input$r3))
+    rglwidget()
+  })
+  
 })
