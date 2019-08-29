@@ -1,5 +1,6 @@
 library(shiny)
 library(shinyIncubator)
+library(rgl)
 
 # Define UI for application that draws a histogram
 shinyUI(
@@ -18,16 +19,21 @@ shinyUI(
                     "Competition coefficients matrix (α)",
                     data.frame(matrix(c(1,0.5,0.05,0.4,1,0.5,0.3,0.6,1),nrow=3))),
         checkboxInput("draw_table","Show table",value=T),
-        checkboxInput("draw_cone","Plot cone",value=F),
-        checkboxInput("draw_3Dcone","Plot interactive cone",value=F)
+        radioButtons("cone_opt", "Plot cone",
+                     choices = c("none", "static", "interactive"),
+                     selected = "none")
+        # checkboxInput("draw_cone","Plot cone",value=F),
+        # checkboxInput("draw_3Dcone","Plot interactive cone",value=F)
       ),
       
       # Show a plot of the generated distribution
       mainPanel(
         conditionalPanel("input.draw_table",fluidRow(tableOutput("stats")),align="center"),
         plotOutput("proj"),
-        conditionalPanel("input.draw_3Dcone",rglwidgetOutput("cone3d"), align = "center"),
-        conditionalPanel("input.draw_cone",plotOutput("cone"), align = "center")
+        conditionalPanel("input.cone_opt == 'static'",
+                         plotOutput("cone"), align = "center"),
+        conditionalPanel("input.cone_opt == 'interactive'",
+                         rglwidgetOutput("cone3d"), align = "center")
       )
     )
   ))
