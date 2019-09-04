@@ -349,7 +349,9 @@ projection_3sp_with_pairwise <- function(alpha,r){
 require(rgl)
 
 
-plot_cone_3D <- function(alpha, r = c(0,0,0)){ # if no vector of growth rates provided, null vector
+plot_cone_3D <- function(alpha, 
+                         r = c(0,0,0),                    # if no vector of growth rates provided, null vector 
+                         sp_name = c('sp1','sp2','sp3')){ # Species names can be customized
   
   D <- diag(1 / sqrt(diag(t(alpha) %*% alpha)))
   alpha_n <- alpha %*% D
@@ -463,6 +465,10 @@ plot_cone_3D <- function(alpha, r = c(0,0,0)){ # if no vector of growth rates pr
   lines3d(c(0,rs[1]),c(0,-rs[2]),c(0,rs[3]), col = 'red', lwd = 2)
   rs2 <- 1.8*r/sqrt(r[1]^2+r[2]^2+r[3]^2)
   lines3d(c(0,rs2[1]),c(0,-rs2[2]),c(0,rs2[3]), col = 'red', lwd = 0.8)
+  
+  text3d(1.5,0,0, text = sp_name[1], col = 'black', lwd = 0.8)
+  text3d(0,-1.5,0, text = sp_name[2], col = 'black', lwd = 0.8)
+  text3d(0,0,1.5, text = sp_name[3], col = 'black', lwd = 0.8)
   
   aspect3d("iso")
 }
