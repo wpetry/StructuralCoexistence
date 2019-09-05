@@ -727,7 +727,9 @@ shinyServer(function(input, output) {
                         "Structural fitness difference (θ)",
                         HTML("Centroid of feasibility domain (r_c)"),
                         "Feasible triplet?",
-                        "Feasible species pairs"),
+                        paste0("Feasible pairs (",
+                               (nchar(feas_txt)+2)/7,
+                               "/3)")),
                Value=c(paste0(round(exp(Omega(alpha=input$alphamat)),3),"㏛"),
                        paste0(round(theta(input$alphamat,r),3),"°"),
                        paste(round(r_centroid(input$alphamat),3),collapse=", "),
@@ -737,6 +739,7 @@ shinyServer(function(input, output) {
   output$stats4sp <- renderTable({
     rr <- c(input$rr1, input$rr2, input$rr3, input$rr4)
     feas_pairs <- test_feasibility_pairs(input$alphamat4,rr)
+    feas_trips <- test_feasibility_trips(input$alphamat4, rr)
     feas_txt <- ifelse(sum(feas_pairs$feasibility)==0L,
                        "none",
                        ifelse(sum(feas_pairs$feasibility)==1L,
@@ -748,14 +751,18 @@ shinyServer(function(input, output) {
                         "Structural fitness difference (θ)",
                         HTML("Centroid of feasibility domain (r_c)"),
                         "Feasible quadruplet?",
-                        "Feasible triplets",
-                        "Feasible pairs"
+                        paste0("Feasible triplets (", 
+                               (nchar(feas_trips)+2)/11,
+                               "/4)"),
+                        paste0("Feasible pairs (",
+                               (nchar(feas_txt)+2)/7,
+                               "/6)")
                         ),
                Value=c(paste0(round(exp(Omega(alpha=input$alphamat4)),3),"㏛"),
                        paste0(round(theta(input$alphamat4,rr),3),"°"),
                        paste(round(r_centroid(input$alphamat4),3),collapse=", "),
                        ifelse(test_feasibility(input$alphamat4,rr)==1L,"yes","no"),
-                       test_feasibility_trips(input$alphamat4, rr),
+                       feas_trips,
                        feas_txt
                        )
                )
