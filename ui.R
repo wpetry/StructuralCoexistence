@@ -35,10 +35,10 @@ shinyUI(
           numericInput("rr1","r1",1,min=0,max=1,step=0.1),
           numericInput("rr2","r2",1,min=0,max=1,step=0.1),
           numericInput("rr3","r3",0.5,min=0,max=1,step=0.1),
-          numericInput("rr4","r4",1,min=0,max=1,step=0.1),
+          numericInput("rr4","r4",0.5,min=0,max=1,step=0.1),
           matrixInput("alphamat4",
                       "Competition coefficients matrix (α)",
-                      data.frame(matrix(c(1,0.25,0.05,0.1,0.2,1,0.2,0.3,0.3,0.05,1,0.3,0.3,0.2,0.4,1),nrow=4))),
+                      data.frame(matrix(c(1,0.5,0.05,0.1,0.4,1,0.5,0.2,0.3,0.6,1,0.2,0.1,0.1,0.5,1),nrow=4))),
           checkboxInput("draw_table4sp","Show table",value=T)
           
         )
