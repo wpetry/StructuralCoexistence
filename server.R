@@ -160,7 +160,6 @@ cone_3sp <- function(alpha){
   Z4 <- vc[3] * lambda
   s3d$points3d(X4,-Y4,Z4,type='l',col='blue4',lwd=4) 
   
-  
   lambda = c(1.2,10)
   X <- v1[1] * lambda 
   Y <- v1[2] * lambda 
@@ -473,7 +472,238 @@ plot_cone_3D <- function(alpha,
   aspect3d("iso")
 }
 
+# 4 species representation projected on the 3-simplex
 
+library(rgl)
+
+projection_4sp_3D <- function(alpha , r, sp_name = c('sp1','sp2','sp3','sp4')){
+  
+  D <- diag(1/sqrt(diag(t(alpha)%*%alpha)))
+  alpha_n <- alpha %*% D
+  
+  v1 <- alpha_n[,1]
+  v2 <- alpha_n[,2]
+  v3 <- alpha_n[,3]
+  v4 <- alpha_n[,4]
+  vc <- (v1 + v2 + v3 + v4)
+  vc <- vc / sqrt(sum(vc^2))
+  vr <- r/sqrt(sum(r^2))
+  
+  v1 <- v1/sum(v1)
+  v2 <- v2/sum(v2)
+  v3 <- v3/sum(v3)
+  v4 <- v4/sum(v4)
+  vc <- vc/sum(vc)
+  vr <- vr/sum(vr)
+  
+  t1 <- c(1,0,0,0)
+  t2 <- c(0,1,0,0)
+  t3 <- c(0,0,1,0)
+  t4 <- c(0,0,0,1)
+  
+  
+  
+  e1 <- c(1,0,0,0)
+  e2 <- c(0,1,0,0)
+  e3 <- c(0,0,1,0)
+  e4 <- c(0,0,0,1)
+  
+  w2 <- t(t(e2-e1))
+  w3 <- t(t(e3-e1))
+  w4 <- t(t(e4-e1))
+  
+  A <- gramSchmidt(cbind(w2,w3,w4))
+  
+  TT <- A$R
+  
+  v1 <- v1[-1]
+  v2 <- v2[-1]
+  v3 <- v3[-1]
+  v4 <- v4[-1]
+  vc <- vc[-1]
+  vr <- vr[-1]
+  t1 <- t1[-1]
+  t2 <- t2[-1]
+  t3 <- t3[-1]
+  t4 <- t4[-1]
+  
+  v1 <- as.vector(TT %*% v1)
+  v2 <- as.vector(TT %*% v2)
+  v3 <- as.vector(TT %*% v3)
+  v4 <- as.vector(TT %*% v4)
+  vc <- as.vector(TT %*% vc)
+  vr <- as.vector(TT %*% vr)
+  t1 <- as.vector(TT %*% t1)
+  t2 <- as.vector(TT %*% t2)
+  t3 <- as.vector(TT %*% t3)
+  t4 <- as.vector(TT %*% t4)
+  
+  
+  
+  e1 <- c(0,0,0)
+  e2 <- c(1,0,0)
+  e3 <- c(0,1,0)
+  e4 <- c(0,0,1)
+  
+  e1 <- as.vector(TT %*% e1)
+  e2 <- as.vector(TT %*% e2)
+  e3 <- as.vector(TT %*% e3)
+  e4 <- as.vector(TT %*% e4)
+  
+  X <- c(e1[1],e2[1])
+  Y <- c(e1[2],e2[2])
+  Z <- c(e1[3],e2[3])
+  
+  plot3d(X,Y,Z, col = 'grey', 
+         xlab = "", ylab = "", zlab = "", type = 'l', lwd = 2, box = FALSE, axes = FALSE)
+  
+  X <- c(e1[1],e3[1])
+  Y <- c(e1[2],e3[2])
+  Z <- c(e1[3],e3[3])
+  lines3d(X,Y,Z, col = 'grey', lwd = 2)
+  
+  X <- c(e1[1],e4[1])
+  Y <- c(e1[2],e4[2])
+  Z <- c(e1[3],e4[3])
+  lines3d(X,Y,Z, col = 'grey', lwd = 2)
+  
+  X <- c(e2[1],e3[1])
+  Y <- c(e2[2],e3[2])
+  Z <- c(e2[3],e3[3])
+  lines3d(X,Y,Z, col = 'grey', lwd = 2)
+  
+  X <- c(e2[1],e4[1])
+  Y <- c(e2[2],e4[2])
+  Z <- c(e2[3],e4[3])
+  lines3d(X,Y,Z, col = 'grey', lwd = 2)
+  
+  X <- c(e3[1],e4[1])
+  Y <- c(e3[2],e4[2])
+  Z <- c(e3[3],e4[3])
+  lines3d(X,Y,Z, col = 'grey', lwd = 2)
+  
+  X <- c(v1[1],v2[1])
+  Y <- c(v1[2],v2[2])
+  Z <- c(v1[3],v2[3])
+  lines3d(X,Y,Z, col = 'darkgreen', lwd = 2)
+  
+  X <- c(v1[1],v3[1])
+  Y <- c(v1[2],v3[2])
+  Z <- c(v1[3],v3[3])
+  lines3d(X,Y,Z, col = 'darkgreen', lwd = 2)
+  
+  X <- c(v1[1],v4[1])
+  Y <- c(v1[2],v4[2])
+  Z <- c(v1[3],v4[3])
+  lines3d(X,Y,Z, col = 'darkgreen', lwd = 2)
+  
+  X <- c(v2[1],v3[1])
+  Y <- c(v2[2],v3[2])
+  Z <- c(v2[3],v3[3])
+  lines3d(X,Y,Z, col = 'darkgreen', lwd = 2)
+  
+  X <- c(v2[1],v4[1])
+  Y <- c(v2[2],v4[2])
+  Z <- c(v2[3],v4[3])
+  lines3d(X,Y,Z, col = 'darkgreen', lwd = 2)
+  
+  X <- c(v3[1],v4[1])
+  Y <- c(v3[2],v4[2])
+  Z <- c(v3[3],v4[3])
+  lines3d(X,Y,Z, col = 'darkgreen', lwd = 2)
+  
+  X <- v1[1]
+  Y <- v1[2]
+  Z <- v1[3]
+  points3d(X,Y,Z, col = 'darkgreen', size = 8)
+  
+  X <- v2[1]
+  Y <- v2[2]
+  Z <- v2[3]
+  points3d(X,Y,Z, col = 'darkgreen', size = 8)
+  
+  X <- v3[1]
+  Y <- v3[2]
+  Z <- v3[3]
+  points3d(X,Y,Z, col = 'darkgreen', size = 8)
+  
+  X <- v4[1]
+  Y <- v4[2]
+  Z <- v4[3]
+  points3d(X,Y,Z, col = 'darkgreen', size = 8)
+  
+  X <- vc[1]
+  Y <- vc[2]
+  Z <- vc[3]
+  points3d(X,Y,Z, col = 'darkorange', size = 10)
+  
+  X <- vr[1]
+  Y <- vr[2]
+  Z <- vr[3]
+  points3d(X,Y,Z, col = 'darkred', size = 10)
+  
+  triangles3d(c(v1[1],v2[1],v3[1]), 
+              c(v1[2],v2[2],v3[2]),
+              c(v1[3],v2[3],v3[3]),
+              alpha=0.2, col = 'darkgreen')
+  
+  triangles3d(c(v1[1],v2[1],v4[1]), 
+              c(v1[2],v2[2],v4[2]),
+              c(v1[3],v2[3],v4[3]),
+              alpha=0.2, col = 'darkgreen')
+  
+  triangles3d(c(v1[1],v3[1],v4[1]), 
+              c(v1[2],v3[2],v4[2]),
+              c(v1[3],v3[3],v4[3]),
+              alpha=0.2, col = 'darkgreen')
+  
+  triangles3d(c(v3[1],v2[1],v4[1]), 
+              c(v3[2],v2[2],v4[2]),
+              c(v3[3],v2[3],v4[3]),
+              alpha=0.2, col = 'darkgreen')
+  
+  
+  X <- t1[1]-.07  # offset species labels position
+  Y <- t1[2]-.07
+  Z <- t1[3]
+  text3d(X,Y,Z, text = sp_name[1])
+  
+  X <- t2[1]+.07
+  Y <- t2[2]-.07
+  Z <- t2[3]
+  text3d(X,Y,Z, text = sp_name[2])
+  
+  X <- t3[1]
+  Y <- t3[2]+.1
+  Z <- t3[3]
+  text3d(X,Y,Z, text = sp_name[3])
+  
+  X <- t4[1]
+  Y <- t4[2]
+  Z <- t4[3]+.1
+  text3d(X,Y,Z, text = sp_name[4])
+  
+  
+  aspect3d("iso")
+}
+
+
+#
+
+
+test_feasibility_trips <- function(alpha, r) {
+  out <- c()
+  v <- 1:4
+  
+  for (i in v) {
+    if (test_feasibility(alpha[-i, -i], r[-i])) {
+      out <- paste(out, paste(v[!v == i], collapse = " & "), sep = ", ")
+    }
+  }
+  
+  return(substr(out, 3, nchar(out)))
+  
+}
 
 
 #################################################
@@ -504,6 +734,32 @@ shinyServer(function(input, output) {
                        ifelse(test_feasibility(input$alphamat,r)==1L,"yes","no"),
                        feas_txt))
   })
+  output$stats4sp <- renderTable({
+    rr <- c(input$rr1, input$rr2, input$rr3, input$rr4)
+    feas_pairs <- test_feasibility_pairs(input$alphamat4,rr)
+    feas_txt <- ifelse(sum(feas_pairs$feasibility)==0L,
+                       "none",
+                       ifelse(sum(feas_pairs$feasibility)==1L,
+                              paste(feas_pairs$pairs[,which(feas_pairs$feasibility==1L)],
+                                    collapse=" & "),
+                              paste(apply(feas_pairs$pairs[,which(feas_pairs$feasibility==1L)],
+                                          MARGIN=2,FUN=paste,collapse=" & "),collapse=", ")))
+    data.frame(Metric=c("Structural niche difference (Ω)",
+                        "Structural fitness difference (θ)",
+                        HTML("Centroid of feasibility domain (r_c)"),
+                        "Feasible quadruplet?",
+                        "Feasible triplets",
+                        "Feasible pairs"
+                        ),
+               Value=c(paste0(round(exp(Omega(alpha=input$alphamat4)),3),"㏛"),
+                       paste0(round(theta(input$alphamat4,rr),3),"°"),
+                       paste(round(r_centroid(input$alphamat4),3),collapse=", "),
+                       ifelse(test_feasibility(input$alphamat4,rr)==1L,"yes","no"),
+                       test_feasibility_trips(input$alphamat4, rr),
+                       feas_txt
+                       )
+               )
+  })
   output$cone <- renderPlot({
     cone_3sp(input$alphamat)
   })
@@ -513,6 +769,11 @@ shinyServer(function(input, output) {
   output$cone3d <- renderRglwidget({
     open3d(useNULL = T)
     plot_cone_3D(input$alphamat, r = c(input$r1, input$r2, input$r3))
+    rglwidget()
+  })
+  output$proj4sp <- renderRglwidget({
+    open3d(useNULL = T)
+    projection_4sp_3D(input$alphamat4, r = c(input$rr1, input$rr2, input$rr3, input$rr4))
     rglwidget()
   })
   
