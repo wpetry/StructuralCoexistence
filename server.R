@@ -29,7 +29,7 @@ r_centroid <- function(alpha){
   D <- diag(1/sqrt(diag(t(alpha)%*%alpha)))
   alpha_n <- alpha %*% D
   r_c <- rowSums(alpha_n) /n 
-  r_c <- t(t(r_c))
+  r_c <- unname(t(t(r_c)))
   return(r_c)
 }
 
@@ -90,6 +90,39 @@ compute_overlap <- function(alpha,Nrand){
   return(out)
   
 }
+
+#################################################-
+## Make species interaction network graph ----
+#################################################-
+library(igraph)
+mk_graph <- function(alphamat, rs){
+  alphamat <- unname(alphamat)
+  g <- graph_from_adjacency_matrix(alphamat > 0)
+  E(g)$weight <- as.numeric(alphamat)
+  widths <- E(g)$weight * 5
+  #widths[widths > 1] <- sqrt(widths)
+  plot(g,
+       main = "Species interaction network",
+       margin = c(0, -0.15, -0.3, -0.15),
+       xlim = c(-1.25, 1.25), ylim = c(-1.25, 1.25),
+       vertex.label.cex = 2.5,
+       vertex.label.color = "black",
+       vertex.size = 50 * rs,
+       vertex.color = "grey80",
+       vertex.frame.color = "transparent",
+       edge.curved = TRUE,
+       edge.width = widths,
+       edge.arrow.size = 3,
+       edge.arrow.mode = c(0, 2, 2,
+                           2, 0, 2,
+                           2, 2, 0),
+       edge.color = "black",
+       edge.loop.angle = 0.75,
+       layout = matrix(c(4, 0, 0, 0, 2, sqrt(3)/2), ncol = 2,
+                       byrow = TRUE))
+}
+
+
 #################################################
 ## exerpt from: toolbox_figure.R
 #################################################
@@ -260,9 +293,9 @@ projection_3sp_with_pairwise <- function(alpha,r){
   v2C <- c((0.5-0.5*v2P[3]-v2P[1])*Xf,v2P[3]*Yf)
   vcC <- c((0.5-0.5*vcP[3]-vcP[1])*Xf,vcP[3]*Yf)
   
-  lines(-c(v1C[1],v2C[1]),c(v1C[2],v2C[2]),col='mediumseagreen',lwd=2)
-  lines(-c(v1C[1],XX[3]),c(v1C[2],YY[3]),col='mediumseagreen',lty=2,lwd=2)
-  lines(-c(v2C[1],XX[3]),c(v2C[2],YY[3]),col='mediumseagreen',lty=2,lwd=2)
+  lines(-c(v1C[1],v2C[1]),c(v1C[2],v2C[2]),col='mediumseagreen',lwd=1)
+  lines(-c(v1C[1],XX[3]),c(v1C[2],YY[3]),col='mediumseagreen',lty=2,lwd=1)
+  lines(-c(v2C[1],XX[3]),c(v2C[2],YY[3]),col='mediumseagreen',lty=2,lwd=1)
   color <- col2rgb("mediumseagreen")
   polygon(-c(v1C[1],v2C[1],XX[3],v1C[1]),c(v1C[2],v2C[2],YY[3],v1C[2]),col=rgb(color[1,1],color[2,1],color[3,1],30,maxColorValue=255) ,border = F  )
   points(-c(v1C[1],v2C[1]),c(v1C[2],v2C[2]),col='dodgerblue',pch=16,cex=1.5)
@@ -285,9 +318,9 @@ projection_3sp_with_pairwise <- function(alpha,r){
   v1C <- c((0.5-0.5*v1P[3]-v1P[1])*Xf,v1P[3]*Yf)
   v3C <- c((0.5-0.5*v3P[3]-v3P[1])*Xf,v3P[3]*Yf)
   vcC <- c((0.5-0.5*vcP[3]-vcP[1])*Xf,vcP[3]*Yf)
-  lines(-c(v1C[1],v3C[1]),c(v1C[2],v3C[2]),col='mediumseagreen',lwd=2)
-  lines(-c(v1C[1],XX[2]),c(v1C[2],YY[2]),col='mediumseagreen',lty=2,lwd=2)
-  lines(-c(v3C[1],XX[2]),c(v3C[2],YY[2]),col='mediumseagreen',lty=2,lwd=2)
+  lines(-c(v1C[1],v3C[1]),c(v1C[2],v3C[2]),col='mediumseagreen',lwd=1)
+  lines(-c(v1C[1],XX[2]),c(v1C[2],YY[2]),col='mediumseagreen',lty=2,lwd=1)
+  lines(-c(v3C[1],XX[2]),c(v3C[2],YY[2]),col='mediumseagreen',lty=2,lwd=1)
   polygon(-c(v1C[1],v3C[1],XX[2],v1C[1]),c(v1C[2],v3C[2],YY[2],v1C[2]),col=rgb(color[1,1],color[2,1],color[3,1],30,maxColorValue=255) ,border = F  )
   points(-c(v1C[1],v3C[1]),c(v1C[2],v3C[2]),col='dodgerblue',pch=16,cex=1.5)
   #points(-vcC[1],vcC[2],col='blue4',pch=16,cex=1.5)
@@ -312,9 +345,9 @@ projection_3sp_with_pairwise <- function(alpha,r){
   v3C <- c((0.5-0.5*v3P[3]-v3P[1])*Xf,v3P[3]*Yf)
   vcC <- c((0.5-0.5*vcP[3]-vcP[1])*Xf,vcP[3]*Yf)
   
-  lines(-c(v2C[1],v3C[1]),c(v2C[2],v3C[2]),col='mediumseagreen',lwd=2)
-  lines(-c(v2C[1],XX[1]),c(v2C[2],YY[1]),col='mediumseagreen',lty=2,lwd=2)
-  lines(-c(v3C[1],XX[1]),c(v3C[2],YY[1]),col='mediumseagreen',lty=2,lwd=2)
+  lines(-c(v2C[1],v3C[1]),c(v2C[2],v3C[2]),col='mediumseagreen',lwd=1)
+  lines(-c(v2C[1],XX[1]),c(v2C[2],YY[1]),col='mediumseagreen',lty=2,lwd=1)
+  lines(-c(v3C[1],XX[1]),c(v3C[2],YY[1]),col='mediumseagreen',lty=2,lwd=1)
   polygon(-c(v2C[1],v3C[1],XX[1],v2C[1]),c(v2C[2],v3C[2],YY[1],v2C[2]),col=rgb(color[1,1],color[2,1],color[3,1],30,maxColorValue=255) ,border = F  )
   points(-c(v2C[1],v3C[1]),c(v2C[2],v3C[2]),col='dodgerblue',pch=16,cex=1.5)
   
@@ -332,22 +365,19 @@ projection_3sp_with_pairwise <- function(alpha,r){
   points(-c(v1C[1],v2C[1],v3C[1],v1C[1]) , c(v1C[2],v2C[2],v3C[2],v1C[2]), col= 'green4', type='l',cex=1.5,lwd=2)
   points(-c(v1C[1],v2C[1],v3C[1]),c(v1C[2],v2C[2],v3C[2]),col='blue4',pch=16,cex=1.5)
   
-  points(-vcC[1], vcC[2], col="blue4", pch=1, cex=1.5) # plot centroid of D_F
+  points(-vcC[1], vcC[2], col="blue4", pch=4, cex=1.5) # plot centroid of D_F
   
   rX <- Xf*(0.5-0.5*((2*r[2]+r[3])/(r[1]+r[2]+r[3])))
   rY <- Yf*(r[3]/(r[1]+r[2]+r[3]))
   
-  points(rX, rY, col= "black", pch=16,cex=1.5)
+  points(rX, rY, col = "black", pch = 21, lwd = 4, cex = 3)
   
   text(-XX,YY,labels = c("sp1","sp2","sp3"),cex=1.7,pos = c(1,1,3))
   
 }
 
 # ported to rgl for interactive 3d plotting
-
 require(rgl)
-
-
 plot_cone_3D <- function(alpha, 
                          r = c(0,0,0),                    # if no vector of growth rates provided, null vector 
                          sp_name = c('sp1','sp2','sp3')){ # Species names can be customized
@@ -473,9 +503,6 @@ plot_cone_3D <- function(alpha,
 }
 
 # 4 species representation projected on the 3-simplex
-
-library(rgl)
-
 projection_4sp_3D <- function(alpha , r, sp_name = c('sp1','sp2','sp3','sp4')){
   
   D <- diag(1/sqrt(diag(t(alpha)%*%alpha)))
@@ -687,10 +714,6 @@ projection_4sp_3D <- function(alpha , r, sp_name = c('sp1','sp2','sp3','sp4')){
   aspect3d("iso")
 }
 
-
-#
-
-
 test_feasibility_trips <- function(alpha, r) {
   out <- c()
   v <- 1:4
@@ -712,7 +735,46 @@ test_feasibility_trips <- function(alpha, r) {
 # This section takes inputs from the ui and displays the desired
 # information using the code from Saavedra et al. above
 
-shinyServer(function(input, output) {
+shinyServer(function(input, output, session) {
+  observeEvent(input$neutral, {
+    updateMatrixInput(session = session,
+                      inputId = "alphamat",
+                      value = matrix(c(1, 0.99, 0.99,
+                                       0.99, 1, 0.99,
+                                       0.99, 0.99, 1),
+                                     nrow = 3,
+                                     dimnames = list(c("α(1,_)", "α(2,_)", "α(3,_)"), c("α(_,1)", "α(_,2)", "α(_,3)")),
+                                     byrow = TRUE))
+    updateNumericInput(session, "r1", value = 1)
+    updateNumericInput(session, "r2", value = 1)
+    updateNumericInput(session, "r3", value = 1)
+  })
+  observeEvent(input$intransient, {
+    updateMatrixInput(session = session,
+                      inputId = "alphamat",
+                      value = matrix(c(1, 3, 0.1,
+                                       0.1, 1, 0.6,
+                                       4, 0.5, 1),
+                                     nrow = 3,
+                                     dimnames = list(c("α(1,_)", "α(2,_)", "α(3,_)"), c("α(_,1)", "α(_,2)", "α(_,3)")),
+                                     byrow = TRUE))
+    updateNumericInput(session, "r1", value = 0.5)
+    updateNumericInput(session, "r2", value = 0.4)
+    updateNumericInput(session, "r3", value = 1)
+  })
+  observeEvent(input$weakintra, {
+    updateMatrixInput(session = session,
+                      inputId = "alphamat",
+                      value = matrix(c(1, 0.05, 0.05,
+                                       0.05, 1, 0.05,
+                                       0.05, 0.05, 1),
+                                     nrow = 3,
+                                     dimnames = list(c("α(1,_)", "α(2,_)", "α(3,_)"), c("α(_,1)", "α(_,2)", "α(_,3)")),
+                                     byrow = TRUE))
+    updateNumericInput(session, "r1", value = 1)
+    updateNumericInput(session, "r2", value = 0.15)
+    updateNumericInput(session, "r3", value = 0.15)
+  })
   output$stats <- renderTable({
     r <- c(input$r1, input$r2, input$r3)
     feas_pairs <- test_feasibility_pairs(input$alphamat,r)
@@ -725,17 +787,19 @@ shinyServer(function(input, output) {
                                           MARGIN=2,FUN=paste,collapse=" & "),collapse=", ")))
     data.frame(Metric=c("Structural niche difference (Ω)",
                         "Structural fitness difference (θ)",
-                        HTML("Centroid of feasibility domain (r_c)"),
+                        HTML("Centroid of feasibility domain (r<sub>c</sub>)"),
                         "Feasible triplet?",
                         paste0("Feasible pairs (",
-                               (nchar(feas_txt)+2)/7,
+                               ifelse(feas_txt == "none",
+                                      0,
+                                      (nchar(feas_txt)+2)/7),
                                "/3)")),
                Value=c(paste0(round(exp(Omega(alpha=input$alphamat)),3),"㏛"),
                        paste0(round(theta(input$alphamat,r),3),"°"),
                        paste(round(r_centroid(input$alphamat),3),collapse=", "),
                        ifelse(test_feasibility(input$alphamat,r)==1L,"yes","no"),
                        feas_txt))
-  })
+  }, sanitize.text.function = function(x) x)
   output$stats4sp <- renderTable({
     rr <- c(input$rr1, input$rr2, input$rr3, input$rr4)
     feas_pairs <- test_feasibility_pairs(input$alphamat4,rr)
@@ -749,7 +813,7 @@ shinyServer(function(input, output) {
                                           MARGIN=2,FUN=paste,collapse=" & "),collapse=", ")))
     data.frame(Metric=c("Structural niche difference (Ω)",
                         "Structural fitness difference (θ)",
-                        HTML("Centroid of feasibility domain (r_c)"),
+                        HTML("Centroid of feasibility domain (r<sub>c</sub>)"),
                         "Feasible quadruplet?",
                         paste0("Feasible triplets (", 
                                (nchar(feas_trips)+2)/11,
@@ -763,9 +827,12 @@ shinyServer(function(input, output) {
                        paste(round(r_centroid(input$alphamat4),3),collapse=", "),
                        ifelse(test_feasibility(input$alphamat4,rr)==1L,"yes","no"),
                        feas_trips,
-                       feas_txt
-                       )
+                       feas_txt)
                )
+  }, sanitize.text.function = function(x) x)
+  output$network <- renderPlot({
+    mk_graph(input$alphamat,
+             rs = c(input$r1, input$r2, input$r3))
   })
   output$cone <- renderPlot({
     cone_3sp(input$alphamat)
