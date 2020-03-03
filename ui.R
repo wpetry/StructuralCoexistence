@@ -51,13 +51,13 @@ shinyUI(
                                    cols = list(names = TRUE,
                                                editableNames = FALSE)),
           conditionalPanel(condition = "input.spp == '3'",
-                           h4("Answers:"),
+                           h4("Scenarios:"),
                            actionButton("neutral",
-                                        "Q1. Quasi-neutrality"),
+                                        "Quasi-neutrality"),
                            actionButton("intransient",
-                                        "Q2. Rock-paper-scissors"),
+                                        "Rock-paper-scissors"),
                            actionButton("weakintra",
-                                        "Q3. Weak interactions")
+                                        "Weak inter-specific interactions")
           ),
           hr(),
           h4("Display options:"),

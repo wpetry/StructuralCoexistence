@@ -683,15 +683,15 @@ shinyServer(function(input, output, session) {
   observeEvent(input$intransient, {
     updateMatrixInput(session = session,
                       inputId = "alphamat",
-                      value = matrix(c(1, 3, 0.1,
-                                       0.1, 1, 0.6,
-                                       4, 0.5, 1),
+                      value = matrix(c(0.5, 0.05, 1.5,
+                                       1.5, 0.5, 0.05,
+                                       0.05, 1.5, 0.5),
                                      nrow = 3,
                                      dimnames = list(c("α(1,_)", "α(2,_)", "α(3,_)"), c("α(_,1)", "α(_,2)", "α(_,3)")),
                                      byrow = TRUE))
-    updateNumericInput(session, "r1", value = 0.5)
-    updateNumericInput(session, "r2", value = 0.4)
-    updateNumericInput(session, "r3", value = 1)
+    updateNumericInput(session, "r1", value = 1)
+    updateNumericInput(session, "r2", value = 0.6)
+    updateNumericInput(session, "r3", value = 0.9)
   })
   # toggle to weak intraspecific interactions scenario ####
   observeEvent(input$weakintra, {
