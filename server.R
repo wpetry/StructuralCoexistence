@@ -93,11 +93,11 @@ compute_overlap <- function(alpha, Nrand){
 #################################################-
 ## Functions: make plots ----
 #################################################-
-# mk_graph ====
+# mk_graph_3sp ====
 # make interaction network plot
-mk_graph <- function(alphamat, rs){
+mk_graph_3sp <- function(alphamat, rs){
   alphamat <- unname(alphamat)
-  g <- graph_from_adjacency_matrix(alphamat > 0)
+  g <- igraph::graph_from_adjacency_matrix(alphamat > 0)
   E(g)$weight <- as.numeric(alphamat)
   widths <- E(g)$weight * 5
   #widths[widths > 1] <- sqrt(widths)
@@ -119,6 +119,39 @@ mk_graph <- function(alphamat, rs){
        edge.color = "black",
        edge.loop.angle = 0.75,
        layout = matrix(c(4, 0, 0, 0, 2, sqrt(3)/2), ncol = 2,
+                       byrow = TRUE))
+}
+
+# mk_graph_4sp ====
+# make interaction network plot
+mk_graph_4sp <- function(alphamat, rs){
+  alphamat <- unname(alphamat)
+  g <- igraph::graph_from_adjacency_matrix(alphamat > 0)
+  E(g)$weight <- as.numeric(alphamat)
+  widths <- E(g)$weight * 5
+  #widths[widths > 1] <- sqrt(widths)
+  plot(g,
+       main = "Species interaction network",
+       margin = c(0, -0.15, -0.3, -0.15),
+       xlim = c(-1.25, 1.25), ylim = c(-1.25, 1.25),
+       vertex.label.cex = 2.5,
+       vertex.label.color = "black",
+       vertex.size = 50 * rs,
+       vertex.color = "grey80",
+       vertex.frame.color = "transparent",
+       edge.curved = TRUE,
+       edge.width = widths,
+       edge.arrow.size = 3,
+       edge.arrow.mode = c(0, 2, 2, 2,
+                           2, 0, 2, 2,
+                           2, 2, 0, 2,
+                           2, 2, 2, 0),
+       edge.color = "black",
+       edge.loop.angle = 0.5,
+       layout = matrix(c(4, 0,
+                         0, 0,
+                         0, 4,
+                         4, 4), ncol = 2,
                        byrow = TRUE))
 }
 
@@ -350,175 +383,132 @@ projection_3sp_with_pairwise <- function(alpha, r){
 
 # plot_cone_3D ====
 # plot interactive (rgl) cone for 3 species community
-plot_cone_3D <- function(alpha, 
-                         r = c(0,0,0),                    # if no vector of growth rates provided, null vector 
-                         sp_name = c('sp1','sp2','sp3')){ # Species names can be customized
-  
+plot_cone_3D <- function(alpha, r = c(0, 0, 0),
+                         sp_name = paste0("sp", 1:3)){
   D <- diag(1 / sqrt(diag(t(alpha) %*% alpha)))
   alpha_n <- alpha %*% D
-  
-  v1 <- alpha_n[,1]
-  v2 <- alpha_n[,2]
-  v3 <- alpha_n[,3]
+  v1 <- alpha_n[, 1]
+  v2 <- alpha_n[, 2]
+  v3 <- alpha_n[, 3]
   vc <- (v1 + v2 + v3)
   vc <- vc / sqrt(sum(vc^2))
-  
-  lambda = c(0,1.2)
-  
+  lambda <- c(0, 1.2)
   X <- v1[1] * lambda 
   Y <- v1[2] * lambda 
   Z <- v1[3] * lambda 
-  
-  lambda = c(0,1.2)
   Sp1 <- v1[1] * lambda 
   Sp2 <- v1[2] * lambda 
   Sp3 <- v1[3] * lambda 
-  
   X2 <- v2[1] * lambda
   Y2 <- v2[2] * lambda
   Z2 <- v2[3] * lambda
-  
   X3 <- v3[1] * lambda
   Y3 <- v3[2] * lambda
   Z3 <- v3[3] * lambda
-  
   X4 <- vc[1] * lambda
   Y4 <- vc[2] * lambda
   Z4 <- vc[3] * lambda
-  
   # feasibility domain
-  
-  plot3d(Sp1, -Sp2, Sp3, col = "mediumseagreen",
+  rgl::plot3d(Sp1, -Sp2, Sp3, col = "mediumseagreen",
          xlab = "", ylab = "", zlab = "",
          type = 'l', lwd = 2.5, box = FALSE, axes = FALSE)
-  lines3d(X2, -Y2, Z2, col = "mediumseagreen", lwd = 2.5)
-  lines3d(X3, -Y3, Z3, col = "mediumseagreen", lwd = 2.5)
-  lines3d(X4, -Y4, Z4, col = "orange", lwd = 2.5)
-  
-  
-  lambda = c(1.2,2)
+  rgl::lines3d(X2, -Y2, Z2, col = "mediumseagreen", lwd = 2.5)
+  rgl::lines3d(X3, -Y3, Z3, col = "mediumseagreen", lwd = 2.5)
+  rgl::lines3d(X4, -Y4, Z4, col = "orange", lwd = 2.5)
+  lambda <- c(1.2, 2)
   X <- v1[1] * lambda 
   Y <- v1[2] * lambda 
   Z <- v1[3] * lambda 
-  
   X2 <- v2[1] * lambda
   Y2 <- v2[2] * lambda
   Z2 <- v2[3] * lambda
-  
   X3 <- v3[1] * lambda
   Y3 <- v3[2] * lambda
   Z3 <- v3[3] * lambda
-  
   X4 <- vc[1] * lambda
   Y4 <- vc[2] * lambda
   Z4 <- vc[3] * lambda
-  
-  lines3d(X,-Y,Z, col = "mediumseagreen", lwd = 1)
-  lines3d(X2,-Y2,Z2, col = "mediumseagreen", lwd = 1)
-  lines3d(X3,-Y3,Z3, col = "mediumseagreen", lwd = 1)
-  lines3d(X4,-Y4,Z4, col = "orange", lwd = 1)
-  
-  
+  rgl::lines3d(X,-Y,Z, col = "mediumseagreen", lwd = 1)
+  rgl::lines3d(X2,-Y2,Z2, col = "mediumseagreen", lwd = 1)
+  rgl::lines3d(X3,-Y3,Z3, col = "mediumseagreen", lwd = 1)
+  rgl::lines3d(X4,-Y4,Z4, col = "orange", lwd = 1)
   #axes
-  
-  lines3d(c(0,1.4),c(0,0),c(0,0), col = "black", lwd = 1)
-  lines3d(c(0,0),c(0,-1.4),c(0,0), col = "black", lwd = 1)
-  lines3d(c(0,0),c(0,0),c(0,1.4), col = "black", lwd = 1)
-  
+  rgl::lines3d(c(0, 1.4), c(0, 0), c(0, 0), col = "black", lwd = 1)
+  rgl::lines3d(c(0, 0), c(0, -1.4), c(0, 0), col = "black", lwd = 1)
+  rgl::lines3d(c(0, 0), c(0, 0), c(0, 1.4), col = "black", lwd = 1)
   #arcs
-  
-  a <- seq(0,1,by=0.01)
+  a <- seq(0, 1, by = 0.01)
   b <- sqrt(1-a^2)
-  c <- rep(0,length(a))
-  lines3d(a*1.2, -b*1.2, c*1.2, col = "grey", lwd = 2.5) 
-  lines3d(c*1.2, -a*1.2, b*1.2, col = "grey", lwd = 2.5) 
-  lines3d(b*1.2, -c*1.2, a*1.2, col = "grey", lwd = 2.5) 
-  
-  mu <- seq(0,1,by=0.01)
+  c <- rep(0, length(a))
+  rgl::lines3d(a*1.2, -b*1.2, c*1.2, col = "grey", lwd = 2.5)
+  rgl::lines3d(c*1.2, -a*1.2, b*1.2, col = "grey", lwd = 2.5)
+  rgl::lines3d(b*1.2, -c*1.2, a*1.2, col = "grey", lwd = 2.5)
+  mu <- seq(0, 1, by = 0.01)
   w1 <- t(t(v1)) %*% t(mu) + t(t(v2)) %*% t(1-mu)
-  w1 <- w1 %*% diag(1/sqrt(colSums(w1^2)))
-  
+  w1 <- w1 %*% diag(1 / sqrt(colSums(w1^2)))
   w2 <- t(t(v2)) %*% t(mu) + t(t(v3)) %*% t(1-mu)
-  w2 <- w2 %*% diag(1/sqrt(colSums(w2^2)))
-  
+  w2 <- w2 %*% diag(1 / sqrt(colSums(w2^2)))
   w3 <- t(t(v3)) %*% t(mu) + t(t(v1)) %*% t(1-mu)
-  w3 <- w3 %*% diag(1/sqrt(colSums(w3^2)))
-  
-  lines3d(w1[1, ]*1.2, -w1[2, ]*1.2, w1[3, ]*1.2,
-          col = "mediumseagreen", lwd = 2) 
-  lines3d(w2[1, ]*1.2, -w2[2, ]*1.2, w2[3, ]*1.2,
-          col = "mediumseagreen", lwd = 2) 
-  lines3d(w3[1, ]*1.2, -w3[2, ]*1.2, w3[3, ]*1.2,
-          col = "mediumseagreen", lwd = 2) 
-  
-  ## Surface of the conical hull (yet to implement in rgl)
-  
-  # wp1 <- s3d$xyz.convert(w1[1, ]*1.2, -w1[2, ]*1.2, w1[3, ]*1.2) 
+  w3 <- w3 %*% diag(1 / sqrt(colSums(w3^2)))
+  rgl::lines3d(w1[1, ]*1.2, -w1[2, ]*1.2, w1[3, ]*1.2,
+               col = "mediumseagreen", lwd = 2) 
+  rgl::lines3d(w2[1, ]*1.2, -w2[2, ]*1.2, w2[3, ]*1.2,
+               col = "mediumseagreen", lwd = 2) 
+  rgl::lines3d(w3[1, ]*1.2, -w3[2, ]*1.2, w3[3, ]*1.2,
+               col = "mediumseagreen", lwd = 2) 
+  # surface of the conical hull (yet to implement in rgl)
+  # wp1 <- s3d$xyz.convert(w1[1, ]*1.2, -w1[2, ]*1.2, w1[3, ]*1.2)
   # wp2 <- s3d$xyz.convert(w2[1, ]*1.2, -w2[2, ]*1.2, w2[3, ]*1.2)
   # wp3 <- s3d$xyz.convert(w3[1, ]*1.2, -w3[2, ]*1.2, w3[3, ]*1.2)
-  # 
   # XXX <- c(wp1$x, wp2$x, wp3$x)
   # YYY <- c(wp1$y, wp2$y, wp3$y)
-  
   # color <- col2rgb("mediumseagreen")
   # polygon(XXX, YYY, col = rgb(color[1, 1], color[2, 1], color[3, 1],
   # 90, maxColorValue = 255), border = FALSE)
-  
   # vector of growth rates
-  
-  rs <- 1.2*r/sqrt(r[1]^2+r[2]^2+r[3]^2)
-  lines3d(c(0,rs[1]),c(0,-rs[2]),c(0,rs[3]), col = "red", lwd = 2)
-  rs2 <- 1.8*r/sqrt(r[1]^2+r[2]^2+r[3]^2)
-  lines3d(c(0,rs2[1]),c(0,-rs2[2]),c(0,rs2[3]), col = "red", lwd = 0.8)
-  
-  text3d(1.5,0,0, text = sp_name[1], col = "black", lwd = 0.8)
-  text3d(0,-1.5,0, text = sp_name[2], col = "black", lwd = 0.8)
-  text3d(0,0,1.5, text = sp_name[3], col = "black", lwd = 0.8)
-  
-  aspect3d("iso")
+  rs <- 1.2*r / sqrt(r[1]^2+r[2]^2+r[3]^2)
+  rgl::lines3d(c(0, rs[1]), c(0, -rs[2]), c(0, rs[3]), col = "red",
+               lwd = 2)
+  rs2 <- 1.8*r / sqrt(r[1]^2+r[2]^2+r[3]^2)
+  rgl::lines3d(c(0, rs2[1]), c(0, -rs2[2]), c(0, rs2[3]), col = "red",
+               lwd = 0.8)
+  rgl::text3d(1.5, 0, 0, text = sp_name[1], col = "black", lwd = 0.8)
+  rgl::text3d(0, -1.5, 0, text = sp_name[2], col = "black", lwd = 0.8)
+  rgl::text3d(0, 0, 1.5, text = sp_name[3], col = "black", lwd = 0.8)
+  rgl::aspect3d("iso")
 }
 
+# projection_4sp_3D ====
 # 4 species representation projected on the 3-simplex
-projection_4sp_3D <- function(alpha , r, sp_name = c('sp1','sp2','sp3','sp4')){
-  
-  D <- diag(1/sqrt(diag(t(alpha)%*%alpha)))
+projection_4sp_3D <- function(alpha, r, sp_name = paste0("sp", 1:4)){
+  D <- diag(1 / sqrt(diag(t(alpha) %*% alpha)))
   alpha_n <- alpha %*% D
-  
   v1 <- alpha_n[,1]
   v2 <- alpha_n[,2]
   v3 <- alpha_n[,3]
   v4 <- alpha_n[,4]
   vc <- (v1 + v2 + v3 + v4)
   vc <- vc / sqrt(sum(vc^2))
-  vr <- r/sqrt(sum(r^2))
-  
-  v1 <- v1/sum(v1)
-  v2 <- v2/sum(v2)
-  v3 <- v3/sum(v3)
-  v4 <- v4/sum(v4)
-  vc <- vc/sum(vc)
-  vr <- vr/sum(vr)
-  
-  t1 <- c(1,0,0,0)
-  t2 <- c(0,1,0,0)
-  t3 <- c(0,0,1,0)
-  t4 <- c(0,0,0,1)
-  
-  
-  
-  e1 <- c(1,0,0,0)
-  e2 <- c(0,1,0,0)
-  e3 <- c(0,0,1,0)
-  e4 <- c(0,0,0,1)
-  
+  vr <- r / sqrt(sum(r^2))
+  v1 <- v1 / sum(v1)
+  v2 <- v2 / sum(v2)
+  v3 <- v3 / sum(v3)
+  v4 <- v4 / sum(v4)
+  vc <- vc / sum(vc)
+  vr <- vr / sum(vr)
+  t1 <- c(1, 0, 0, 0)
+  t2 <- c(0, 1, 0, 0)
+  t3 <- c(0, 0, 1, 0)
+  t4 <- c(0, 0, 0, 1)
+  e1 <- c(1, 0, 0, 0)
+  e2 <- c(0, 1, 0, 0)
+  e3 <- c(0, 0, 1, 0)
+  e4 <- c(0, 0, 0, 1)
   w2 <- t(t(e2-e1))
   w3 <- t(t(e3-e1))
   w4 <- t(t(e4-e1))
-  
-  A <- gramSchmidt(cbind(w2,w3,w4))
-  
+  A <- pracma::gramSchmidt(cbind(w2, w3, w4))
   TT <- A$R
-  
   v1 <- v1[-1]
   v2 <- v2[-1]
   v3 <- v3[-1]
@@ -529,7 +519,6 @@ projection_4sp_3D <- function(alpha , r, sp_name = c('sp1','sp2','sp3','sp4')){
   t2 <- t2[-1]
   t3 <- t3[-1]
   t4 <- t4[-1]
-  
   v1 <- as.vector(TT %*% v1)
   v2 <- as.vector(TT %*% v2)
   v3 <- as.vector(TT %*% v3)
@@ -540,170 +529,135 @@ projection_4sp_3D <- function(alpha , r, sp_name = c('sp1','sp2','sp3','sp4')){
   t2 <- as.vector(TT %*% t2)
   t3 <- as.vector(TT %*% t3)
   t4 <- as.vector(TT %*% t4)
-  
-  
-  
-  e1 <- c(0,0,0)
-  e2 <- c(1,0,0)
-  e3 <- c(0,1,0)
-  e4 <- c(0,0,1)
-  
+  e1 <- c(0, 0, 0)
+  e2 <- c(1, 0, 0)
+  e3 <- c(0, 1, 0)
+  e4 <- c(0, 0, 1)
   e1 <- as.vector(TT %*% e1)
   e2 <- as.vector(TT %*% e2)
   e3 <- as.vector(TT %*% e3)
   e4 <- as.vector(TT %*% e4)
-  
-  X <- c(e1[1],e2[1])
-  Y <- c(e1[2],e2[2])
-  Z <- c(e1[3],e2[3])
-  
-  plot3d(X,Y,Z, col = "grey", 
-         xlab = "", ylab = "", zlab = "", type = 'l', lwd = 2, box = FALSE, axes = FALSE)
-  
-  X <- c(e1[1],e3[1])
-  Y <- c(e1[2],e3[2])
-  Z <- c(e1[3],e3[3])
-  lines3d(X,Y,Z, col = "grey", lwd = 2)
-  
-  X <- c(e1[1],e4[1])
-  Y <- c(e1[2],e4[2])
-  Z <- c(e1[3],e4[3])
-  lines3d(X,Y,Z, col = "grey", lwd = 2)
-  
-  X <- c(e2[1],e3[1])
-  Y <- c(e2[2],e3[2])
-  Z <- c(e2[3],e3[3])
-  lines3d(X,Y,Z, col = "grey", lwd = 2)
-  
-  X <- c(e2[1],e4[1])
-  Y <- c(e2[2],e4[2])
-  Z <- c(e2[3],e4[3])
-  lines3d(X,Y,Z, col = "grey", lwd = 2)
-  
-  X <- c(e3[1],e4[1])
-  Y <- c(e3[2],e4[2])
-  Z <- c(e3[3],e4[3])
-  lines3d(X,Y,Z, col = "grey", lwd = 2)
-  
-  X <- c(v1[1],v2[1])
-  Y <- c(v1[2],v2[2])
-  Z <- c(v1[3],v2[3])
-  lines3d(X,Y,Z, col = "darkgreen", lwd = 2)
-  
-  X <- c(v1[1],v3[1])
-  Y <- c(v1[2],v3[2])
-  Z <- c(v1[3],v3[3])
-  lines3d(X,Y,Z, col = "darkgreen", lwd = 2)
-  
-  X <- c(v1[1],v4[1])
-  Y <- c(v1[2],v4[2])
-  Z <- c(v1[3],v4[3])
-  lines3d(X,Y,Z, col = "darkgreen", lwd = 2)
-  
-  X <- c(v2[1],v3[1])
-  Y <- c(v2[2],v3[2])
-  Z <- c(v2[3],v3[3])
-  lines3d(X,Y,Z, col = "darkgreen", lwd = 2)
-  
-  X <- c(v2[1],v4[1])
-  Y <- c(v2[2],v4[2])
-  Z <- c(v2[3],v4[3])
-  lines3d(X,Y,Z, col = "darkgreen", lwd = 2)
-  
-  X <- c(v3[1],v4[1])
-  Y <- c(v3[2],v4[2])
-  Z <- c(v3[3],v4[3])
-  lines3d(X,Y,Z, col = "darkgreen", lwd = 2)
-  
+  X <- c(e1[1], e2[1])
+  Y <- c(e1[2], e2[2])
+  Z <- c(e1[3], e2[3])
+  rgl::plot3d(X, Y, Z, col = "grey", 
+              xlab = "", ylab = "", zlab = "", type = 'l', lwd = 2,
+              box = FALSE, axes = FALSE)
+  X <- c(e1[1], e3[1])
+  Y <- c(e1[2], e3[2])
+  Z <- c(e1[3], e3[3])
+  rgl::lines3d(X, Y, Z, col = "grey", lwd = 2)
+  X <- c(e1[1], e4[1])
+  Y <- c(e1[2], e4[2])
+  Z <- c(e1[3], e4[3])
+  rgl::lines3d(X, Y, Z, col = "grey", lwd = 2)
+  X <- c(e2[1], e3[1])
+  Y <- c(e2[2], e3[2])
+  Z <- c(e2[3], e3[3])
+  rgl::lines3d(X, Y, Z, col = "grey", lwd = 2)
+  X <- c(e2[1], e4[1])
+  Y <- c(e2[2], e4[2])
+  Z <- c(e2[3], e4[3])
+  rgl::lines3d(X, Y, Z, col = "grey", lwd = 2)
+  X <- c(e3[1], e4[1])
+  Y <- c(e3[2], e4[2])
+  Z <- c(e3[3], e4[3])
+  rgl::lines3d(X, Y, Z, col = "grey", lwd = 2)
+  X <- c(v1[1], v2[1])
+  Y <- c(v1[2], v2[2])
+  Z <- c(v1[3], v2[3])
+  rgl::lines3d(X, Y, Z, col = "darkgreen", lwd = 2)
+  X <- c(v1[1], v3[1])
+  Y <- c(v1[2], v3[2])
+  Z <- c(v1[3], v3[3])
+  rgl::lines3d(X, Y, Z, col = "darkgreen", lwd = 2)
+  X <- c(v1[1], v4[1])
+  Y <- c(v1[2], v4[2])
+  Z <- c(v1[3], v4[3])
+  rgl::lines3d(X, Y, Z, col = "darkgreen", lwd = 2)
+  X <- c(v2[1], v3[1])
+  Y <- c(v2[2], v3[2])
+  Z <- c(v2[3], v3[3])
+  rgl::lines3d(X, Y, Z, col = "darkgreen", lwd = 2)
+  X <- c(v2[1], v4[1])
+  Y <- c(v2[2], v4[2])
+  Z <- c(v2[3], v4[3])
+  rgl::lines3d(X, Y, Z, col = "darkgreen", lwd = 2)
+  X <- c(v3[1], v4[1])
+  Y <- c(v3[2], v4[2])
+  Z <- c(v3[3], v4[3])
+  rgl::lines3d(X, Y, Z, col = "darkgreen", lwd = 2)
   X <- v1[1]
   Y <- v1[2]
   Z <- v1[3]
-  points3d(X,Y,Z, col = "darkgreen", size = 8)
-  
+  rgl::points3d(X, Y, Z, col = "darkgreen", size = 8)
   X <- v2[1]
   Y <- v2[2]
   Z <- v2[3]
-  points3d(X,Y,Z, col = "darkgreen", size = 8)
-  
+  rgl::points3d(X, Y, Z, col = "darkgreen", size = 8)
   X <- v3[1]
   Y <- v3[2]
   Z <- v3[3]
-  points3d(X,Y,Z, col = "darkgreen", size = 8)
-  
+  rgl::points3d(X, Y, Z, col = "darkgreen", size = 8)
   X <- v4[1]
   Y <- v4[2]
   Z <- v4[3]
-  points3d(X,Y,Z, col = "darkgreen", size = 8)
-  
+  rgl::points3d(X, Y, Z, col = "darkgreen", size = 8)
   X <- vc[1]
   Y <- vc[2]
   Z <- vc[3]
-  points3d(X,Y,Z, col = "darkorange", size = 10)
-  
+  rgl::points3d(X, Y, Z, col = "darkorange", size = 10)
   X <- vr[1]
   Y <- vr[2]
   Z <- vr[3]
-  points3d(X,Y,Z, col = "darkred", size = 10)
-  
-  triangles3d(c(v1[1],v2[1],v3[1]), 
-              c(v1[2],v2[2],v3[2]),
-              c(v1[3],v2[3],v3[3]),
-              alpha=0.2, col = "darkgreen")
-  
-  triangles3d(c(v1[1],v2[1],v4[1]), 
-              c(v1[2],v2[2],v4[2]),
-              c(v1[3],v2[3],v4[3]),
-              alpha=0.2, col = "darkgreen")
-  
-  triangles3d(c(v1[1],v3[1],v4[1]), 
-              c(v1[2],v3[2],v4[2]),
-              c(v1[3],v3[3],v4[3]),
-              alpha=0.2, col = "darkgreen")
-  
-  triangles3d(c(v3[1],v2[1],v4[1]), 
-              c(v3[2],v2[2],v4[2]),
-              c(v3[3],v2[3],v4[3]),
-              alpha=0.2, col = "darkgreen")
-  
-  
+  rgl::points3d(X, Y, Z, col = "darkred", size = 10)
+  rgl::triangles3d(c(v1[1], v2[1], v3[1]), 
+                   c(v1[2], v2[2], v3[2]),
+                   c(v1[3], v2[3], v3[3]),
+                   alpha = 0.2, col = "darkgreen")
+  rgl::triangles3d(c(v1[1], v2[1], v4[1]), 
+                   c(v1[2], v2[2], v4[2]),
+                   c(v1[3], v2[3], v4[3]),
+                   alpha = 0.2, col = "darkgreen")
+  rgl::triangles3d(c(v1[1], v3[1], v4[1]), 
+                   c(v1[2], v3[2], v4[2]),
+                   c(v1[3], v3[3], v4[3]),
+                   alpha = 0.2, col = "darkgreen")
+  rgl::triangles3d(c(v3[1], v2[1], v4[1]), 
+                   c(v3[2], v2[2], v4[2]),
+                   c(v3[3], v2[3], v4[3]),
+                   alpha = 0.2, col = "darkgreen")
   X <- t1[1]-.07  # offset species labels position
   Y <- t1[2]-.07
   Z <- t1[3]
-  text3d(X,Y,Z, text = sp_name[1])
-  
+  rgl::text3d(X, Y, Z, text = sp_name[1])
   X <- t2[1]+.07
   Y <- t2[2]-.07
   Z <- t2[3]
-  text3d(X,Y,Z, text = sp_name[2])
-  
+  rgl::text3d(X, Y, Z, text = sp_name[2])
   X <- t3[1]
   Y <- t3[2]+.1
   Z <- t3[3]
-  text3d(X,Y,Z, text = sp_name[3])
-  
+  rgl::text3d(X, Y, Z, text = sp_name[3])
   X <- t4[1]
   Y <- t4[2]
   Z <- t4[3]+.1
-  text3d(X,Y,Z, text = sp_name[4])
-  
-  
-  aspect3d("iso")
+  rgl::text3d(X, Y, Z, text = sp_name[4])
+  rgl::aspect3d("iso")
 }
 
+# test_feasibility_trips ====
+# test feasibility of species triplets
 test_feasibility_trips <- function(alpha, r) {
   out <- c()
   v <- 1:4
-  
   for (i in v) {
     if (test_feasibility(alpha[-i, -i], r[-i])) {
-      out <- paste(out, paste(v[!v == i], collapse = " & "), sep = ", ")
+      out <- paste(out, paste(v[!v == i], collapse = " + "), sep = ", ")
     }
   }
-  
   return(substr(out, 3, nchar(out)))
-  
 }
-
 
 #################################################-
 # Shiny server logic ----
@@ -761,10 +715,10 @@ shinyServer(function(input, output, session) {
                        "none",
                        ifelse(sum(feas_pairs$feasibility) == 1L,
                               paste(feas_pairs$pairs[, which(feas_pairs$feasibility == 1L)],
-                                    collapse = " & "),
+                                    collapse = " + "),
                               paste(apply(feas_pairs$pairs[, which(feas_pairs$feasibility == 1L)],
                                           MARGIN = 2, FUN = paste,
-                                          collapse = " & "),
+                                          collapse = " + "),
                                     collapse = ", ")))
     data.frame(Metric = c("Structural niche difference (Ω)",
                           "Structural fitness difference (θ)",
@@ -793,10 +747,10 @@ shinyServer(function(input, output, session) {
                        "none",
                        ifelse(sum(feas_pairs$feasibility) == 1L,
                               paste(feas_pairs$pairs[, which(feas_pairs$feasibility == 1L)],
-                                    collapse = " & "),
+                                    collapse = " + "),
                               paste(apply(feas_pairs$pairs[, which(feas_pairs$feasibility == 1L)],
                                           MARGIN = 2, FUN = paste,
-                                          collapse = " & "),
+                                          collapse = " + "),
                                     collapse = ", ")))
     data.frame(Metric = c("Structural niche difference (Ω)",
                           "Structural fitness difference (θ)",
@@ -819,10 +773,15 @@ shinyServer(function(input, output, session) {
                          feas_trips,
                          feas_txt))},
     sanitize.text.function = function(x) x)
-  # render network plot ####
-  output$network <- renderPlot({
-    mk_graph(input$alphamat,
-             rs = c(input$r1, input$r2, input$r3))
+  # render network plot -- 3 species ####
+  output$network_3sp <- renderPlot({
+    mk_graph_3sp(input$alphamat,
+                 rs = c(input$r1, input$r2, input$r3))
+  })
+  # render network plot -- 4 species ####
+  output$network_4sp <- renderPlot({
+    mk_graph_4sp(input$alphamat4,
+                 rs = c(input$rr1, input$rr2, input$rr3, input$rr4))
   })
   # render static 3D cone ####
   output$cone <- renderPlot({
@@ -831,19 +790,19 @@ shinyServer(function(input, output, session) {
   # render 3 species plot ####
   output$proj <- renderPlot({
     projection_3sp_with_pairwise(input$alphamat,
-                                 r = c(input$r1, input$r2,
-                                       input$r3))
+                                 r = c(input$r1, input$r2, input$r3))
   })
   # render interactive cone -- 3 species ####
-  output$cone3d <- renderRglwidget({
-    open3d(useNULL = T)
+  output$cone3d <- rgl::renderRglwidget({
+    rgl::open3d(useNULL = TRUE)
     plot_cone_3D(input$alphamat, r = c(input$r1, input$r2, input$r3))
-    rglwidget()
+    rgl::rglwidget()
   })
   # render interactive cone -- 4 species ####
-  output$proj4sp <- renderRglwidget({
-    open3d(useNULL = T)
-    projection_4sp_3D(input$alphamat4, r = c(input$rr1, input$rr2, input$rr3, input$rr4))
-    rglwidget()
+  output$proj4sp <- rgl::renderRglwidget({
+    rgl::open3d(useNULL = TRUE)
+    projection_4sp_3D(input$alphamat4, r = c(input$rr1, input$rr2,
+                                             input$rr3, input$rr4))
+    rgl::rglwidget()
   })
 })
