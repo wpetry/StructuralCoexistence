@@ -12,13 +12,13 @@ Saavedra, S., Rohr, R. P., Bascompte, J., Godoy, O., Kraft, N. J. B. and Levine,
 
 ### To do:
 
-- [ ] explainer text on main panel
+- [x] explainer text on main panel
 - [ ] legend for plot symbols
 - [ ] better labels on cone plot
-- [ ] row/column headers for the competition coefficient matrix
+- [x] row/column headers for the competition coefficient matrix
 - [ ] graphically indicate which species pairs are feasible
-- [ ] figure out subscript in RenderTable (expressions?)
+- [x] figure out subscript in RenderTable (expressions?)
 - [x] tab for 4 species (better way to show 3d plots?)
-- [ ] remove +/- on sidebarPanel (ugh Javascript in shinyIncubator)
+- [x] remove +/- on sidebarPanel (ugh Javascript in shinyIncubator)
 - [ ] speed up server-side
-- [ ] re-do coordinate system to make ternary plot equilateral (will require re-write of most functions, possibly additional package dependency to make the Cartesian-to-ternary conversions easier)
+- [x] re-do coordinate system to make ternary plot equilateral (will require re-write of most functions, possibly additional package dependency to make the Cartesian-to-ternary conversions easier)
