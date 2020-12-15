@@ -12,13 +12,9 @@ Saavedra, S., Rohr, R. P., Bascompte, J., Godoy, O., Kraft, N. J. B. and Levine,
 
 ### To do:
 
-- [x] explainer text on main panel
 - [ ] legend for plot symbols
 - [ ] better labels on cone plot
-- [x] row/column headers for the competition coefficient matrix
 - [ ] graphically indicate which species pairs are feasible
-- [x] figure out subscript in RenderTable (expressions?)
-- [x] tab for 4 species (better way to show 3d plots?)
-- [x] remove +/- on sidebarPanel (ugh Javascript in shinyIncubator)
 - [ ] speed up server-side
-- [x] re-do coordinate system to make ternary plot equilateral (will require re-write of most functions, possibly additional package dependency to make the Cartesian-to-ternary conversions easier)
+- [ ] allow user to select Sedgwick species, retrieving data from Figshare repo
+
