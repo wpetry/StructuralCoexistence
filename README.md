@@ -1,5 +1,7 @@
 # StructuralCoexistence
 
+[![DOI](https://zenodo.org/badge/103034930.svg)](https://zenodo.org/badge/latestdoi/103034930)
+
 This is a Shiny app that allows the user to interactively explore the structural approach to coexistence framework described by Saavedra et al. (2017). For the app, I have simply extracted analysis and plotting code from a [Dryad repository](https://doi.org/10.5061/dryad.v9f5s) that accompanies the paper, making modifications for interactivity. Vasco Lepori made the 3D plots and extended the app to 4-species communities. 
 
 To use the app, clone this repo locally or try it out online at: https://ecodynamics.shinyapps.io/StructuralCoexistence/
