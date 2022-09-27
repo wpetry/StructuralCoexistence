@@ -9,8 +9,10 @@ To use the app, clone this repo locally or try it out online at: https://ecodyna
 Any errors are most likely mine—please submit an Issue or contact me directly if you find one.
 
 ### Citations:
-This app has been archived in Zenodo and has a citable DOI. We also request that you cite the original paper that inspired our app.
+This app has been archived in Zenodo and has a citable DOI:
 
-Petry, W. and V. Lepori. (2022), wpetry/StructuralCoexistence: Initial release (v0.1). Zenodo. [https://doi.org/10.5281/zenodo.7114127](https://doi.org/10.5281/zenodo.7114127)
+- Petry, W. and V. Lepori. (2022), wpetry/StructuralCoexistence: Initial release (v0.1). Zenodo. [https://doi.org/10.5281/zenodo.7114127](https://doi.org/10.5281/zenodo.7114127)
 
-Saavedra, S., Rohr, R. P., Bascompte, J., Godoy, O., Kraft, N. J. B. and Levine, J. M. (2017), A structural approach for understanding multispecies coexistence. Ecol Monogr, 87: 470–486. [doi:10.1002/ecm.1263](http://dx.doi.org/10.1002/ecm.1263)
+We also request that you cite the original paper that inspired our app:
+
+- Saavedra, S., Rohr, R. P., Bascompte, J., Godoy, O., Kraft, N. J. B. and Levine, J. M. (2017), A structural approach for understanding multispecies coexistence. Ecol Monogr, 87: 470–486. [doi:10.1002/ecm.1263](http://dx.doi.org/10.1002/ecm.1263)
