@@ -11,12 +11,3 @@ Any errors are most likely mine—please submit an Issue or contact me directly 
 ### Citation:
 
 Saavedra, S., Rohr, R. P., Bascompte, J., Godoy, O., Kraft, N. J. B. and Levine, J. M. (2017), A structural approach for understanding multispecies coexistence. Ecol Monogr, 87: 470–486. [doi:10.1002/ecm.1263](http://dx.doi.org/10.1002/ecm.1263)
-
-### To do:
-
-- [ ] legend for plot symbols
-- [ ] better labels on cone plot
-- [ ] graphically indicate which species pairs are feasible
-- [ ] speed up server-side
-- [ ] allow user to select Sedgwick species, retrieving data from Figshare repo
-
