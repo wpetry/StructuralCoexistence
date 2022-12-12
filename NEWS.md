@@ -1,3 +1,14 @@
+# v.0.2
+12 December 2022
+### New features
+- 4-species scenarios for weak interactions and quasi-neutrality (#7)
+
+### Other changes
+- minor re-wording and reformatting of UI side panel
+
+### Bug fixes
+- fixed disappearance of species interaction network thanks to Gaurav Kandlikar (#8, #10)
+
 # v.0.1 - Initial release
 26 September 2022
 ### New features
