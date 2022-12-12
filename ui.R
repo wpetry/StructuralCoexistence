@@ -24,13 +24,16 @@ shinyUI(
     sidebarLayout(
       sidebarPanel(
         p("Coexistence theory has largely focused on 2-species communities, but this neglects the role of indirect interactions that are found only in larger systems. Saavedra et al. (doi:10.1002/ecm.1263) offers an approach to quantifying diversity in these systems using the mathematics of structural stability borrowed from engineering. Use the controls below to explore how competitor fitness & interactions govern diversity."),
+        hr(),
         h4("Number of Species:"),
         radioButtons("spp", label = NULL,
                      choices = c('3', '4'),
                      selected = '3'),
+        hr(),
+        h4("Species intrinsic growth rates:"),
         conditionalPanel(
           condition = "input.spp == '3'",
-          h4("Species intrinsic growth rates:"),
+          
           numericInput("r1", "r1", 1, min = 0, max = 1,
                        step = 0.1),
           numericInput("r2", "r2", 0.6, min = 0, max = 1,
@@ -50,6 +53,7 @@ shinyUI(
                                                editableNames = FALSE),
                                    cols = list(names = TRUE,
                                                editableNames = FALSE)),
+          hr(),
           conditionalPanel(condition = "input.spp == '3'",
                            h4("Scenarios:"),
                            actionButton("neutral",
@@ -61,8 +65,8 @@ shinyUI(
           ),
           hr(),
           h4("Display options:"),
-          checkboxInput("draw_table", "Show table", value = TRUE),
-          checkboxInput("draw_network", "Show network", value = TRUE),
+          checkboxInput("draw_network", "Species interaction network", value = TRUE),
+          checkboxInput("draw_table", "Coexistence metric table", value = TRUE),
           radioButtons("cone_opt", "Plot cone",
                        choices = c("none", "static", "interactive"),
                        selected = "none")
@@ -73,6 +77,7 @@ shinyUI(
           numericInput("rr2", "r2", 1, min = 0, max = 1, step = 0.1),
           numericInput("rr3", "r3", 0.5, min = 0, max = 1, step = 0.1),
           numericInput("rr4", "r4", 0.5, min = 0, max = 1, step = 0.1),
+          h4("Interaction coefficients:"),
           shinyMatrix::matrixInput(inputId = "alphamat4",
                                    value = matrix(c(1, 0.4, 0.3, 0.1,
                                                     0.5, 1, 0.6, 0.1,
@@ -87,41 +92,61 @@ shinyUI(
                                                editableNames = FALSE),
                                    cols = list(names = TRUE,
                                                editableNames = FALSE)),
-          checkboxInput("draw_table4sp", "Show table", value = TRUE)
+          hr(),
+          h4("Display options:"),
+          checkboxInput("draw_network4sp", "Species interaction network", value = TRUE),
+          checkboxInput("draw_table4sp", "Coexistence metric table", value = TRUE)
         )
       ),
       
       # Outputs
       mainPanel(
         # 3 species
-        conditionalPanel("input.spp == '3' && input.draw_network == 1 && input.draw_table == 1",
-                         fluidRow(
+        fluidRow(
+          conditionalPanel("input.spp == '3' & input.draw_network",
                            column(width = 7,
-                                  plotOutput("network_3sp")),
+                                  plotOutput("network_3sp")
+                           )
+          ),
+          conditionalPanel("input.spp == '3' & input.draw_table",
                            column(width = 5,
                                   h5("Coexistence metrics"),
-                                  tableOutput("stats"))
-                         ),
-                         align = "center"),
+                                  tableOutput("stats")
+                           )
+          )),
         conditionalPanel("input.spp == '3'",
-                         plotOutput("proj"),
-                         align = "right"),
-        conditionalPanel("input.spp == '3' && input.cone_opt == 'static'",
-                         plotOutput("cone"), align = "center"),
-        conditionalPanel("input.spp == '3' && input.cone_opt == 'interactive'",
-                         rglwidgetOutput("cone3d"), align = "center"),
-        # 4 species
-        conditionalPanel("input.spp == '4' && input.draw_network == 1 && input.draw_table4sp == 1",
                          fluidRow(
+                           plotOutput("proj")
+                         )
+        ),
+        conditionalPanel("input.spp == '3' & input.cone_opt == 'static'",
+                         fluidRow(
+                           plotOutput("cone")
+                         )
+        ),
+        conditionalPanel("input.spp == '3' & input.cone_opt == 'interactive'",
+                         fluidRow(
+                           rglwidgetOutput("cone3d")
+                         )
+        ),
+        # 4 species
+        fluidRow(
+          conditionalPanel("input.spp == '4' & input.draw_network4sp",
                            column(width = 7,
-                                  plotOutput("network_4sp")),
+                                  plotOutput("network_4sp")
+                           )
+          ),
+          conditionalPanel("input.spp == '4' & input.draw_table4sp",
                            column(width = 5,
                                   h5("Coexistence metrics"),
-                                  tableOutput("stats4sp"))
-                         ),
-                         align = "center"),
+                                  tableOutput("stats4sp")
+                           )
+          )),
         conditionalPanel("input.spp == '4'",
-                         rglwidgetOutput("proj4sp"), align = "center")
+                         fluidRow(
+                           rglwidgetOutput("proj4sp")
+                         )
+        )
       )
     )
   )
