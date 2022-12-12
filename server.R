@@ -669,9 +669,9 @@ shinyServer(function(input, output, session) {
   observeEvent(input$neutral, {
     updateMatrixInput(session = session,
                       inputId = "alphamat",
-                      value = matrix(c(0.999, 0.998, 0.998,
-                                       0.998, 0.999, 0.998,
-                                       0.998, 0.998, 0.999),
+                      value = matrix(c(1, 0.999, 0.999,
+                                       0.998, 1, 0.999,
+                                       0.999, 0.999, 1),
                                      nrow = 3,
                                      dimnames = list(c("α(1,_)", "α(2,_)", "α(3,_)"), c("α(_,1)", "α(_,2)", "α(_,3)")),
                                      byrow = TRUE))
