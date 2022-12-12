@@ -665,8 +665,9 @@ test_feasibility_trips <- function(alpha, r) {
 # This section takes inputs from the ui and displays the desired
 # information using the code from Saavedra et al. above
 shinyServer(function(input, output, session) {
-  # toggle to near-neutral scenario ####
-  observeEvent(input$neutral, {
+  # Apply pre-set scenarios
+  # 3sp: toggle to near-neutral scenario ####
+  observeEvent(input$neutral3, {
     updateMatrixInput(session = session,
                       inputId = "alphamat",
                       value = matrix(c(1, 0.999, 0.999,
@@ -679,8 +680,8 @@ shinyServer(function(input, output, session) {
     updateNumericInput(session, "r2", value = 1)
     updateNumericInput(session, "r3", value = 1)
   })
-  # toggle to intransient (rock-paper-scissors) scenario ####
-  observeEvent(input$intransient, {
+  # 3sp: toggle to intransient (rock-paper-scissors) scenario ####
+  observeEvent(input$intransient3, {
     updateMatrixInput(session = session,
                       inputId = "alphamat",
                       value = matrix(c(0.5, 0.05, 1.5,
@@ -693,8 +694,8 @@ shinyServer(function(input, output, session) {
     updateNumericInput(session, "r2", value = 0.6)
     updateNumericInput(session, "r3", value = 0.9)
   })
-  # toggle to weak intraspecific interactions scenario ####
-  observeEvent(input$weakintra, {
+  # 3sp: toggle to weak intraspecific interactions scenario ####
+  observeEvent(input$weakintra3, {
     updateMatrixInput(session = session,
                       inputId = "alphamat",
                       value = matrix(c(1, 0.05, 0.05,
@@ -706,6 +707,40 @@ shinyServer(function(input, output, session) {
     updateNumericInput(session, "r1", value = 1)
     updateNumericInput(session, "r2", value = 0.15)
     updateNumericInput(session, "r3", value = 0.15)
+  })
+  # 4sp: toggle to near-neutral scenario ####
+  observeEvent(input$neutral4, {
+    updateMatrixInput(session = session,
+                      inputId = "alphamat4",
+                      value = matrix(c(1, 0.999, 0.999, 0.999,
+                                       0.998, 1, 0.999, 0.999,
+                                       0.999, 0.999, 1, 0.999,
+                                       0.999, 0.999, 0.999, 1),
+                                     nrow = 4,
+                                     dimnames = list(c("α(1,_)", "α(2,_)", "α(3,_)", "α(4,_)"),
+                                                     c("α(_,1)", "α(_,2)", "α(_,3)", "α(_,4)")),
+                                     byrow = TRUE))
+    updateNumericInput(session, "rr1", value = 1)
+    updateNumericInput(session, "rr2", value = 1)
+    updateNumericInput(session, "rr3", value = 1)
+    updateNumericInput(session, "rr4", value = 1)
+  })
+  # 4sp: toggle to weak intraspecific interactions scenario ####
+  observeEvent(input$weakintra4, {
+    updateMatrixInput(session = session,
+                      inputId = "alphamat4",
+                      value = matrix(c(1, 0.05, 0.05, 0.05,
+                                       0.05, 1, 0.05, 0.05,
+                                       0.05, 0.05, 1, 0.05,
+                                       0.05, 0.05, 0.05, 1),
+                                     nrow = 4,
+                                     dimnames = list(c("α(1,_)", "α(2,_)", "α(3,_)", "α(4,_)"),
+                                                     c("α(_,1)", "α(_,2)", "α(_,3)", "α(_,4)")),
+                                     byrow = TRUE))
+    updateNumericInput(session, "rr1", value = 1)
+    updateNumericInput(session, "rr2", value = 0.15)
+    updateNumericInput(session, "rr3", value = 0.15)
+    updateNumericInput(session, "rr4", value = 0.15)
   })
   # render table with coexistence metrics -- 3 species ####
   output$stats <- renderTable({
