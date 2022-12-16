@@ -1,0 +1,12 @@
+cff-version: 1.1.0
+message: "To cite this Shiny app, please use the following."
+authors:
+  - family-names: Petry
+    given-names: William K.
+    orcid: https://orcid.org/0000-0002-5230-5987
+  - family-names: Lepori
+     given-names: Vasco J.
+     orcid: https://orcid.org/0000-0002-5086-5171
+title: StructuralCoexistence
+version: v0.2
+date-released: 2022-12-12
